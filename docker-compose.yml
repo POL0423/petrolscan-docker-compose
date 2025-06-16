@@ -1,0 +1,84 @@
+########################################################
+# PetrolScan - the Bachelor Thesis application
+# Docker Compose configuration file
+# Author: Marek Poláček (pol0423@vsb.cz)
+# Date: 2025-06-16
+########################################################
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    container_name: petrolscan-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: petrolscan
+      MYSQL_USER: petrolscan_user
+      MYSQL_PASSWORD: petrolscan_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - petrolscan-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  web:
+    build:
+      context: ../petrolscan-web-app
+      dockerfile: Dockerfile
+      args:
+        - DB_HOST=db
+        - DB_PORT=3306
+        - DB_NAME=petrolscan
+        - DB_USER=petrolscan_user
+        - DB_PASSWORD=petrolscan_password
+    container_name: petrolscan-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=petrolscan
+      - DB_USER=petrolscan_user
+      - DB_PASSWORD=petrolscan_password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - petrolscan-network
+  crawler:
+    build:
+      context: ../petrolscan-crawler
+      dockerfile: Dockerfile
+      args:
+        - DB_HOSTNAME=db
+        - DB_PORT=3306
+        - DB_USERNAME=petrolscan_user
+        - DB_PASSWORD=petrolscan_password
+        - DB_DATABASE=petrolscan
+    container_name: petrolscan-crawler
+    restart: unless-stopped
+    environment:
+      - DB_HOSTNAME=db
+      - DB_PORT=3306
+      - DB_USERNAME=petrolscan_user
+      - DB_PASSWORD=petrolscan_password
+      - DB_DATABASE=petrolscan
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - petrolscan-network
+networks:
+  petrolscan-network:
+    driver: bridge
+volumes:
+  mysql_data:
+    driver: local
