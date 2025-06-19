@@ -1,6 +1,8 @@
 # PetrolScan - Bachelor Thesis
 
 PetrolScan is a web application for comparing fuel prices of different petrol stations in Czechia.
+This project is a part of my Bachelor Thesis assignment
+([available here](https://github.com/POL0423/BachelorThesis)).
 
 ## Installation
 
@@ -8,10 +10,10 @@ This Docker Compose file starts the PetrolScan application complete with the fro
 You can try the application by running the following command on your terminal:
 
 ```console
-$ docker-compose up --build -f docker-compose.yml
+$ docker-compose up --build -d
 ```
 
-Make sure to set the MySQL user passwords in the `docker-compose.yml` file. The default value is `change-me`.
+Make sure to set the MySQL user credentials in the `docker-compose.yml` file for production.
 
 ## Deployment
 
