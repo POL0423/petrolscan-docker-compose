@@ -74,6 +74,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - crawler_logs:/var/log
     networks:
       - petrolscan-network
 networks:
@@ -81,4 +83,6 @@ networks:
     driver: bridge
 volumes:
   mysql_data:
+    driver: local
+  crawler_logs:
     driver: local
