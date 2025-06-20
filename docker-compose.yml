@@ -76,6 +76,8 @@ services:
         condition: service_healthy
     volumes:
       - crawler_logs:/var/log
+      - crawler_data:/app/storage
+      - crawler_screenshots:/app/screenshots
     networks:
       - petrolscan-network
 networks:
@@ -85,4 +87,8 @@ volumes:
   mysql_data:
     driver: local
   crawler_logs:
+    driver: local
+  crawler_data:
+    driver: local
+  crawler_screenshots:
     driver: local
