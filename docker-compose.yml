@@ -16,7 +16,10 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 3G
+          memory: 8G
+        reservations:
+          cpus: '0.5'
+          memory: 4G
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: petrolscan
