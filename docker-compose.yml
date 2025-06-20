@@ -12,6 +12,11 @@ services:
       dockerfile: Dockerfile.mysql
     container_name: petrolscan-db
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: petrolscan
